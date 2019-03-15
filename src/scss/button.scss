@@ -1,0 +1,36 @@
+$button-border-radius: 4px;
+$button-padding: 10px;
+$button-border-color: #e0e0e0;
+$button-bg: #cda76e;
+$button-width: 150px;
+$button-height: 36px;
+
+
+.primary-button {
+  text-align: center;
+  width: $button-width;
+  height: $button-height;
+  line-height: $button-height;
+  border-radius: $button-border-radius;
+  font-size: $middle-font-size;
+  cursor: pointer;
+}
+
+.primary-button_yellow-color{
+  background: linear-gradient(90deg,$button-bg-color1 0%,$button-bg-color2 100%);
+  color: #fff;
+}
+
+.btn-bg-white {
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #d5d5d5;
+}
+
+.btn-disabled {
+  background-color: #d5d5d5;
+}
+
+.btn-top {
+  margin-top: 0.3rem
+}

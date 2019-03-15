@@ -1,0 +1,89 @@
+.form-wrap {
+  .input-comp {
+    margin-bottom: 25px;
+  }
+  .form-filed {
+    position: relative;
+    background-color: #fff;
+    height: $form-input-height;
+    .label {
+      font-size: $middle-font-size;
+      color: $form-label-color;
+      height: $form-input-height;
+      line-height: $form-input-height;
+    }
+    .form-filed_input-outer {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: $middle-font-size;
+      height: 100%;
+      border-radius:4px;
+      margin: 0 20px;
+    }
+
+    .form-filed_input-outer_border {
+      border: 1px solid $form-border-color;
+    }
+    .form__error {
+      position: absolute;
+      left: 0;
+      font-size: 10px;
+      color: red;
+    }
+    .value {
+      padding-left: 10px;
+      height: 100%;
+      border-radius:4px;
+    }
+    .unit {
+      position: relative;
+      right: 5px;
+      font-size: $middle-font-size;
+      color: #444;
+      text-align: right;
+    }
+   .term {
+      font-size: $middle-font-size;
+      color: #444;
+    }
+
+    .img-code{
+      height: 1rem;
+      position: absolute;
+      right: 0;
+      width: 2rem;
+    }
+
+  }
+  .on-border {
+    &::after {
+      border-bottom: none;
+    }
+  }
+  .bottom {
+    margin-bottom: 0.2rem;
+  }
+  .number{
+    font-size: $middle-font-size;
+    color:#fff !important;
+  }
+  .eye{
+    width: 0.44rem;
+    height: 0.28rem;
+    position: absolute;
+    right: 0;
+  }
+  .prompt{
+    font-size: 0.22rem;
+    color: #fff;
+    position: absolute;
+    top: 1.15rem;
+    left: 0.3rem;
+    opacity: 0.5;
+  }
+  .read-input-text {
+    width: 30px;
+    padding-left: 0;
+  }
+}
