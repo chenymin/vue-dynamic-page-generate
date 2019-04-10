@@ -62,10 +62,13 @@
 </script>
 
 <style>
-  .form-wrap {
-    overflow: hidden;
-  }
-  .form-wrap .input-comp {
+  /*.form-wrap {*/
+    /*overflow: hidden;*/
+  /*}*/
+  .form-wrap .input-comp,
+  .form-wrap .sms-input-component,
+  .form-wrap .calendar-component,
+  .form-wrap .search-select-component {
     float: left;
   }
 </style>

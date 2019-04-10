@@ -93,6 +93,7 @@
 
 <style lang="scss" scoped>
   .sms-input-component {
+    overflow: hidden;
     .sms-code {
       height: 1rem;
       width: 2rem;
