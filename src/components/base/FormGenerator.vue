@@ -7,7 +7,9 @@
                @input="updateForm(field.model, $event)"
                v-validate="field.rules || {}"
                :error="errors.first(field.label)"
-               v-bind="field">
+               v-bind="field"
+               v-if="!field.isComponentShow"
+               >
       <slot>
         <!-- 默认内容 -->
       </slot>
@@ -62,9 +64,6 @@
 </script>
 
 <style>
-  /*.form-wrap {*/
-    /*overflow: hidden;*/
-  /*}*/
   .form-wrap .input-comp,
   .form-wrap .sms-input-component,
   .form-wrap .calendar-component,

@@ -10,6 +10,16 @@ export default {
       this.eventBus.$emit('toast/show')
     },
     /**
+     * 找到所需的schema item
+     * @param arrayItem {Array} 过滤函数
+     * @return []
+     * */
+    findSchemaItems (arrayItem) {
+      return this.schema.filter(({model}) => {
+        return arrayItem.includes(model)
+      })
+    },
+    /**
      * 获取apply初始化的数据
      * @param dispathName {String}  分发路径名称
      * @param param {Object} 参数
