@@ -1,29 +1,30 @@
 <template>
-  <div class="input-comp" :class="customComponentCss">
+  <div class="input-comp">
     <div class="form-filed">
-      <label v-if='label ' class="label" :class="customLabelCss">{{ label }}</label>
-      <div class="form-filed_input-outer" :class="{'form-filed_input-outer_border' : hasBorder}">
-        <input  class="value"
-                :type='type'
-                :value="value"
-                @input='updateValue'
-                @blur="$emit('blur')"
-                :readonly="readonly"
-                :disabled='disabled'
-                :placeholder="placeholder"
-                :class="customInputCss">
-        <span class="unit" v-if="unit !== ''">{{unit}}</span>
-        <slot></slot>
-        <transition name='slide'>
-          <p v-show='error' class='form__error'>{{ error }}</p>
-        </transition>
-      </div>
+      <label v-if='label ' class="label">{{ label }}</label>
+      <input  class="value"
+              :type='type'
+              :value="value"
+              @input='updateValue'
+              @blur="blurFun"
+              :readonly="readonly"
+              :disabled='disabled'
+              :placeholder="placeholder"
+              :maxlength="maxlength"
+              :class="[ {'input': true}, {'input__error': !!error}, ...inputClass]">
+      <slot name="input-slot"></slot>
+      <span class="unit" v-if="unit !== ''">{{unit}}</span>
     </div>
+    <transition name='slide'>
+      <p v-show='isShowPError && error' class='form__error'>{{ error }}</p>
+    </transition>
   </div>
 </template>
 
 <script>
+import componentMinx from '@/components/mixin/componentMinx'
 export default {
+  mixins: [componentMinx],
   $_veeValidate: {
     name () {
       return this.label
@@ -67,27 +68,52 @@ export default {
       type: String,
       default: ''
     },
-    customLabelCss: {
-      type: String,
-      default: ''
-    },
-    customInputCss: {
-      type: String,
-      default: ''
-    },
-    customComponentCss: {
-      type: String,
-      default: ''
-    },
-    hasBorder: {
+    isShowPError: {  // 是否把校验错误信息用p标签显示出来
       type: Boolean,
-      default: true
+      default: false
+    },
+    maxlength: {  // input输入的最大长度
+      type: Number,
+      default: null
+    },
+    inputClass: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   methods: {
     updateValue (e) {
       this.$emit('input', e.target.value)
+    },
+    blurFun () {
+      setTimeout(() => this.$emit('blur'), 0)  // 这样的写法作用是把事件往执行顺序的后面推了，让blur事件在后面执行
+      setTimeout(function () {  // 作用：微信浏览器H5页面软键盘弹出又关闭导致页面空缺的问题
+        window.scrollTo(0, 0)
+      }, 100)
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+		.value {
+			overflow: hidden; 
+			text-overflow:ellipsis; 
+			white-space: nowrap; 
+		}
+  .form__error {
+    font-size: 0.28rem;
+    padding-left: 0.3rem;
+    background-color: #fff;
+    color: red;
+  }
+  .input-component__margin-top {
+    margin-top: .2rem;
+  }
+
+  .input-component__padding-left {
+    padding-left: .3rem;
+  }
+</style>

@@ -8,25 +8,25 @@
                v-validate="field.rules || {}"
                :error="errors.first(field.label)"
                v-bind="field"
-               v-if="!field.isComponentShow"
-               >
-      <slot>
+               v-if="!field.isComponentShow">
+      <slot :field="field">
         <!-- 默认内容 -->
+        {{ field.fieldType }}
       </slot>
     </component>
   </div>
 </template>
 
 <script>
-  import MyLabel from '../label'
-  import MyInput from '../myinput'
-  import SmsCode from '../multiplexingInput'
-  import IdCalendar from '../idCalendar'
-  import SelectSearch from '../selectSearch'
+  import MyInput from '@/components/myinput'
+  import SmsCode from '@/components/smsverification'
+  import DatePicker from '@/components/datepicker/datepicker'
+  import MySelection from '@/components/selection'
+  import Distpicker from '@/components/distpickers/distpicker'
 
   export default {
     name: 'FormGenerator',
-    components: { MyInput, SmsCode, MyLabel, IdCalendar, SelectSearch },
+    components: { MyInput, SmsCode, DatePicker, MySelection, Distpicker },
     props: {
       value: {
         type: Object,
@@ -62,12 +62,3 @@
     }
   }
 </script>
-
-<style>
-  .form-wrap .input-comp,
-  .form-wrap .sms-input-component,
-  .form-wrap .calendar-component,
-  .form-wrap .search-select-component {
-    float: left;
-  }
-</style>

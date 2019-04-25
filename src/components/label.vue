@@ -1,8 +1,5 @@
 <template>
-  <p class="part">
-    {{labelText}}
-    <slot></slot>
-  </p>
+  <p class="part">{{labelText}}</p>
 </template>
 
 <script>
@@ -19,10 +16,10 @@
 <style lang="scss" scoped>
   .part {
     display: flex;
-    width: 100%;
     align-items: center;
-    height: 50px;
-    font-size:14px;
+    height: 0.6rem;
+    font-size: 0.26rem;
     color: #999;
+    padding-left: 0.3rem;
   }
 </style>

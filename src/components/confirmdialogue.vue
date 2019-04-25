@@ -1,5 +1,5 @@
 <template>
-  <cover-container :is-touch-close='isTouchClose' ref='coverCom' v-model="isShowConfirmDialogue">
+  <cover-container :is-touch-close='isTouchClose' ref='coverConfirmDialog' v-model="isShowConfirmDialogue">
     <div class='content-container' slot='cover-slot' v-if="isShowConfirmDialogue">
       <div class='content'>
         <p class='text'>{{text}}</p>
@@ -12,7 +12,7 @@
       </div>
     </div>
   </cover-container>
-  
+
 </template>
 
 <script>
@@ -40,15 +40,14 @@ export default {
   },
   methods: {
     confirm () {
-      this.eventBus.$emit('confirm/ok')
+      this.$emit('confirm-ok')
     },
     cancleModal () {
       this.isShowConfirmDialogue = false
-      this.eventBus.$emit('confirm/cancle')
+      this.$emit('confirm-cancle')
     },
     showCofirm  () {
       this.isShowConfirmDialogue = true
-      this.$refs.coverCom.showCover()
     }
   },
   components: {

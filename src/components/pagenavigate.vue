@@ -1,13 +1,15 @@
 <template>
-  <div class="page-navigate-component-wrap">
-    <div v-for="(item, index) in labelText" :key="index" class="flow" :class="{'active': currentIndex === index}">
-      <div class="pentagram" v-if="currentIndex === index">
-        <img src="../assets/star_five.png" alt="" class="star"/>
-      </div>
-      <div class="round hollow-round" :class="{'solid-round': currentIndex >= index}"></div>
-      <div class="line" :class="{'solid-line': currentIndex > index, 'noline': index === labelText.length - 1}"></div>
-      <span class="text" :class="{'text-color': currentIndex >= index}">{{item}}</span>
-    </div>
+  <div class="page-navigate-component">
+    <ul class="page-navigate-component__list">
+      <li v-for="(item, index) in labelText" :key="index" class="page-navigate-component__item" :class="{'active': currentIndex === index}">
+        <div class="pentagram" v-if="currentIndex === index">
+          <img src="../assets/star_five.png" alt="" class="star"/>
+        </div>
+        <p class="round hollow-round" :class="{'solid-round': currentIndex >= index}"></p>
+        <p class="line" :class="{'solid-line': currentIndex > index, 'noline': index === labelText.length - 1}"></p>
+        <span class="text" :class="{'text-color': currentIndex >= index}">{{item}}</span>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -29,65 +31,81 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../scss/var.scss';
-  .page-navigate-component-wrap{
-    padding: 40px 0 65px 0;
+  .page-navigate-component{
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     background-color: #fff;
-    text-align: center;
-    .flow{
+    &__list {
+      display: flex;
+      flex-direction: row;
+    }
+    &__item {
       position: relative;
-      display: inline-block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 1.8rem;
+    }
+    &__indication__icon {
+       display: flex;
+       width: 1.8rem;
+       align-items: center;
+       justify-content: center;
+       width: 1.8rem;
     }
     .text{
-      position: absolute;
-      top:45px;
-      left: -40px;
-      font-size: 16px;
-      width: 113px;
-      text-align: center;
+      font-size: 0.22rem;
+      min-width: 1rem;
+      padding-top: .2rem;
+      color: #666;
     }
     .pentagram{
       position: absolute;
-      top: 50%;
-      margin-top: -12px;
-      width: 34px;
-      height: 34px;
+      top: 0;
+      width: 0.5rem;
+      height: 0.5rem;
       border-radius: 50%;
-      background: linear-gradient(to bottom,$pagenavigate-component-circle-bg-color1,$pagenavigate-component-circle-bg-color2);
+      background: linear-gradient(to bottom, #8086A7, #272D56);
+      z-index: 3;
     }
     .round{
-      width: 24px;
-      height: 24px;
+      width: 0.4rem;
+      height: 0.4rem;
       border-radius: 50%;
     }
     .solid-round{
-      background: linear-gradient(to bottom, $pagenavigate-component-circle-bg-color1,$pagenavigate-component-circle-bg-color2);
-      border: 1px solid $pagenavigate-component-circle-bg-color1;
+      background-color: #272D56;
     }
     .hollow-round{
-      border:1px solid #999999;
+      border:1px solid #C2C7E5;
     }
     .line{
-      width: 140px;
-      border-top:1px dashed #999999;
-      margin-left: 25px;
-      margin-top: -13px;
+      position: absolute;
+      left: calc(50% + .2rem);
+      top: 10px;
+      width: calc(100% - 0.4rem);
+      border-top: 1px dashed #C2C7E5;
+      z-index: 0;
     }
-    .solid-line{
-      border-top: 2px solid $pagenavigate-component-circle-bg-color2;
+
+    .solid-line {
+      border: 1px solid #4B5177;
     }
     .noline{
       width: 0;
     }
     .star{
-      width: 17px;
+      width: 0.24rem;
       position: absolute;
-      top:8px;
-      left: 10px;
+      top: 0.13rem;
+      left: 0.14rem;
     }
-    .text-color{
-      color: $pagenavigate-component-text-color;
-      margin-top: -2px;
+    .active .text{
+      color: #374186;
     }
   }
 </style>
+

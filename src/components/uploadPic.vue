@@ -1,17 +1,17 @@
 <template>
   <div class="uploadpic-container">
     <transition-expand>
-      <div v-if='isShow'>
+      <div class="uploadpic-container__wrap" v-if='isShow'>
         <ul class="pic-list">
           <li class="list-item" v-for="(item, index) in imgList" :key='index'>
-            <img class='upload-pic' :src='item.fileUrl' alt="" :class="{'aspectFill-x': item.classType, 'aspectFill-y': item.classType === 0}">
-            <img class="img-remove" src="../assets/icon_close.png" @click.prevent="imgRemove(index, item.fileId)">
+            <img class='upload-pic' :src='item.imageUrl' alt="" :class="{'aspectFill-x': item.classType, 'aspectFill-y': item.classType === 0}">
+            <img class="img-remove" src="../assets/icon_close.png" @click.prevent="imgRemove(index)">
           </li>
-          <li class="list-item" v-if="imgList.length < limitImg">
+          <li class="list-item" v-if="imgList.length < maxNumImg">
             <label class="list-item-label" :for="inputId">
-              <img class="pic-camera" src="../assets/camera.png" alt="" v-if="status === 0">
+              <img class="pic-camera" src="../assets/icon_add.png" alt="" v-if="status === 0">
               <img class='pic-bg' :src="getPic()" alt="">
-              <span class="upload-text" v-if="status === 0">上传图片</span>
+              <!-- <span class="upload-text" v-if="status === 0">上传图片</span> -->
               <span class="upload-fail" v-if="status === 2">图片上传失败<br>点击重新上传</span>
               <div class="uploading" v-if="status === 1">
                 <p class='text'>图片上传中</p>
@@ -31,7 +31,7 @@
 <script>
   import Exif from 'exif-js'
   import {getStore} from '../utils/storage'
-  import {uploadPic, deletePic} from '../api/loanApply'
+  import uploadPicService from '../api/loanApply'
   import TransitionExpand from './transition/transitionExpand'
 
   export default {
@@ -82,7 +82,11 @@
         type: String,
         default: 'upld_info.png'
       },
-      atLeastImg: {
+      minNumImg: {
+        type: Number,
+        default: 0
+      },
+      maxNumImg: {
         type: Number,
         default: 0
       },
@@ -93,6 +97,10 @@
       validOff: {
         type: Boolean,
         default: false
+      },
+      imageType: {
+        type: String,
+        default: ''
       }
     },
     methods: {
@@ -101,6 +109,12 @@
         let files = e.target.files || e.dataTransfer.files
         if (!files.length) return
         this.picValue = files[0]
+        if (this.picValue.size > 10240000) {
+          let msg = '上传大小不能超过10M'
+          this.$store.commit('changeToast', {content: msg})
+          this.eventBus.$emit('toast/show')
+          return
+        }
         this.imgPreview(this.picValue)
         return
       },
@@ -253,23 +267,16 @@
       getPic () {
         return require(`../assets/${this.bgPic}`)
       },
-      emitValidate () {
-        if (this.validOff) {
-          this.$store.commit('getValidatorMsg', {[this.model[0]]: {msg: '', isValid: true}})
-          return
-        }
-        const msg = this.imgList.length < this.atLeastImg ? `请上传${this.label}` : ''
-        const result = this.imgList.length < this.atLeastImg ? 0 : 1
-        this.$store.commit('getValidatorMsg', {[this.model[0]]: {msg, isValid: result}})
-      },
       imgRemove (index, id) {
         this.removeIndex = index
-        this.$emit('upload-remove', this.confirmDeleteImg)
+        this.$emit('upload-remove', this.confirmDeleteImg(index))
       },
-      confirmDeleteImg () {
-        const param = {fileId: this.imgList[this.removeIndex].fileId}
-        deletePic(param).then(({data, code}) => {
-          if (code === 'suss') {
+      confirmDeleteImg (index) {
+        let param = {}
+        param.applyToken = getStore('applyToken')
+        param.imageNo = this.imgList[index].imageNo
+        uploadPicService.deletePic(param).then(({data, respCode}) => {
+          if (respCode === '000000') {
             this.currentIndex--
             this.imgList.splice(this.removeIndex, 1)
             this.eventBus.$emit('confirm/hidden')
@@ -279,26 +286,28 @@
       postImg () {
         this.status = 1
         /* eslint-disable no-undef */
+        let randomCode = new Date().getTime() + '-' + Math.ceil(Math.random() * 100)
         let param = new FormData() // 创建form对象
-        param.append(this.model[this.currentIndex], this.picValue) // 通过append向form对象添加数据
-        uploadPic(param, {
+        param.append('applyToken', getStore('applyToken')) // 通过append向form对象添加数据
+        param.append('file', this.picValue)
+        param.append('randomCode', randomCode)
+        param.append('imageType', this.imageType)
+        uploadPicService.uploadPic(param, {
           method: 'post',
           headers: {
-            'Content-Type': 'multipart/form-data',
-            authorization: getStore('token'),
-            proType: getStore('projectNo')
+            'Content-Type': 'multipart/form-data'
           },
           onUploadProgress: (e) => {
             const percentCompleted = Math.round((e.loaded * 100) / e.total)
             this.progressStyle = {width: `${percentCompleted}%`}
           }
-        }).then(({data, code}) => {
+        }).then(({data, respCode}) => {
           this.$refs.uploadFileInput.value = null
-          if (code === 'suss') {
+          if (respCode === '000000') {
             this.status = 0
             this.currentIndex++
             this.resizeImage(data, 'wspectFill')
-            this.imgList.push(data)
+            this.imgList.push(data.imageInfo)
           } else {
             this.status = 2
           }
@@ -343,10 +352,6 @@
         this.imgList = val
         this.initImg()
         this.currentIndex = this.imgList.length
-        this.emitValidate()
-      },
-      'validOff' () {
-        this.emitValidate()
       }
     },
     components: {
@@ -354,7 +359,6 @@
     },
     mounted () {
       this.initImg()
-      this.emitValidate()
     }
   }
 </script>
@@ -419,7 +423,7 @@
         text-align: center;
         .upload-progress {
           position: relative;
-          margin-top: 0.25rem; 
+          margin-top: 0.25rem;
           border-radius: 4px;
           height: 0.1rem;
           background-color: #949494;
@@ -442,10 +446,10 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 0.58rem;
-        height: 0.5rem;
-        margin-top: -0.45rem;
-        margin-left: -0.25rem;
+        width: 0.6rem;
+        height: 0.6rem;
+        margin-top: -0.3rem;
+        margin-left: -0.3rem;
       }
       .img-remove {
         position: absolute;
@@ -456,6 +460,8 @@
       }
       .upload-pic {
         position: absolute;
+        width: 100%;
+        height: 100%;
       }
       .prompting-text {
         position: absolute;
@@ -479,7 +485,7 @@
   .customized-cardfont .pic-list, .customized-cardback .pic-list {
     padding: 0.15rem;
     .list-item {
-      margin: 0;
+      margin: 0.12rem 0;
       width: 100%;
     }
   }
