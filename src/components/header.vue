@@ -1,16 +1,9 @@
 <template>
-  <div class="header-component">
+  <div class="header-component-wrap">
     <header class="header">
-      <slot name="left-slot">
-        <p v-if="isArrow" @click="reboundPage" class="header-component__arrow-area">
-          <span class="left-arrow"></span>
-          <span class="header-component__rebound-text">返回</span>
-        </p>
-      </slot>
+      <span class="left-arrow" @click="reboundPage" v-if="isArrow"></span>
       <span class="title" :class="{'title-middle': isMiddle, 'title-left': !isMiddle}">{{title}}</span>
-      <slot name="right-slot">
-        <span class="right-title" @click="jumpOtherPage" v-if="rightTitle !== ''">{{rightTitle}}</span>
-      </slot>
+      <span class="right-title" @click="jumpOtherPage" v-if="rightTitle !== ''">{{rightTitle}}</span>
     </header>
     <p class="space"></p>
   </div>
@@ -38,20 +31,11 @@
       isClose: {
         type: Boolean,
         default: false
-      },
-      url: {
-        type: String,
-        default: ''
       }
     },
     methods: {
       reboundPage () {
-        if (this.url === '') {
-          this.$router.go(-1)
-          return
-        }
-        this.$router.replace({path: this.url})
-        this.$emit('rule-back')  // 上传图片页面从查看规范页面header里点击返回，监听事件
+        this.$router.go(-1)
       },
       jumpOtherPage () {
         this.$emit('header-right-space')
@@ -61,77 +45,64 @@
 </script>
 
 <style lang="scss" scoped>
-  .header-component {
-    &__rebound-text {
-       position: absolute;
-       display: flex;
-       align-items: center;
-       width: 1rem;
-       height: 1rem;
-       left: .8rem;
-       top: 0
-    }
-    &__arrow-area {
-      position: relative;
-      height: 100%;
-    }
-    &__rebound-text{
-      font-size: .3rem;
-      color: #333;
-    }
-  }
-  .header {
-    display: flex;
-    height: 1rem;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    background-color: #fff;
-    position: fixed;
-    width: 100%;
-    z-index: 5;
-    .left-arrow {
-      position: absolute;
-      height: 100%;
-      width: 1rem;
+  @import '../scss/var.scss';
+  .header-component-wrap {
+    .header {
       display: flex;
-      &::before {
+      height: 50px;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      background:linear-gradient(90deg,$header-component-bg-color1 0%,$header-component-bg-color1 50%,$header-component-bg-color1 100%);
+      position: fixed;
+      width: 100%;
+      z-index: 5;
+      .left-arrow {
         position: absolute;
-        content: '';
-        width: 12px;
-        height: 12px;
-        border-bottom: solid 1px #333;
-        border-left: solid 1px #333;
-        transform: rotate(45deg);
-        top: 50%;
-        margin-top: -6px;
-        left: 50%;
+        height: 100%;
+        width: 50px;
+        display: flex;
+        left:0;
+        top:0;
+          &::before {
+            position: absolute;
+            content: '';
+            width: 16px;
+            height: 16px;
+            border-bottom: solid 1px #fff;
+            border-left: solid 1px #fff;
+            transform: rotate(45deg);
+            top: 50%;
+            margin-top: -8px;
+            left: 50%;
+        }
+      }
+      .title {
+        font-size: 14px;
+        color: #fff;
+      }
+      .right-title {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        font-size: 14px;
+        color: #fff;
+        padding: 0 30px;
+        display: flex;
+        align-items: center;
+      }
+      .title-left {
+        padding-left: 50px;
+      }
+      .title-middle {
+        display: flex;
+        flex: 1;
+        justify-content: center;
       }
     }
-    .title {
-      font-size: .36rem;
-      color: #333;
+    .space {
+      height: 50px;
     }
-    .right-title {
-      position: absolute;
-      right: 0;
-      height: 100%;
-      font-size: .28rem;
-      color: #333;
-      padding: 0 0.3rem;
-      display: flex;
-      align-items: center;
-    }
-    .title-left {
-      padding-left: 1rem;
-    }
-    .title-middle {
-      display: flex;
-      flex: 1;
-      justify-content: center;
-    }
-  }
-  .space {
-    height: 1rem;
   }
 </style>
 

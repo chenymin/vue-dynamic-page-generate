@@ -61,17 +61,16 @@
     justify-content: center;
     position: fixed;
     z-index: 9999;
-    width: 4.4rem;
+    width: 3rem;
     height: 1.4rem;
     background-color: #4c4c4c;
     border-radius: 4px;
     opacity: 0.8;
     top: 50%;
     left: 50%;
-    margin-left: -2.2rem;
+    margin-left: -1.4rem;
     margin-top: -2.4rem;
-    padding: .3rem;
-    text-align: center;
+    padding: 0.3rem;
     .text {
       color: #fff;
       font-size: 0.26rem;
