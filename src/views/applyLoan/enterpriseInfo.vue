@@ -1,6 +1,6 @@
 <template>
   <div class="enterprise-info-wrap page-inner-wrap">
-      <page-navigate :currentIndex="0" :label-text="$store.state.global.pagenavigateInfo"></page-navigate>
+      <page-navigate :currentIndex="1" :label-text="$store.state.global.pagenavigateInfo"></page-navigate>
       <form-generator :schema="schema" v-model="formData" ref="formTest"></form-generator>
     <div class="button-outer">
       <button @click="myMethods" style="clear: both" class="primary-button primary-button_yellow-color">下一步</button>
